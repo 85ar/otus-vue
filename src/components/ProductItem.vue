@@ -1,11 +1,16 @@
 <template>
-  <div>
-    <div class="flex w-40 mx-0">
-      <img class="object-contain" :src="product.image" alt="img" />
+  <div class="w-72 p-5">
+    <div class="flex w-40 h-40 m-auto mb-2">
+      <img
+        class="object-contain flex w-full h-full"
+        :src="product.image"
+        alt="img"
+      />
     </div>
-    <h3>{{ product.title }}</h3>
-
-    <div>{{ product.price }}</div>
+    <div class="">
+      <p class="m-auto text-center font-bold">{{ product.title }}</p>
+      <span class="font-thin">Price: {{ product.price }}</span>
+    </div>
   </div>
 </template>
 
