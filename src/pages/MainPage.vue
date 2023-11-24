@@ -1,25 +1,29 @@
 <template>
   <div>
-    <div class="text-base text-center m-3">Список товаров</div>
-    <button
-      @click="showProducts()"
-      class="py-2 px-4 rounded btn bg-blue-500 text-white"
-    >
-      {{ !isShowProduct ? "Показать товары" : "Скрыть товары" }}
-    </button>
-    <Products :products="products" v-if="isShowProduct" />
+    <div>Список товаров</div>
+    <div v-if="loading">
+      <Spinner />
+    </div>
+    <Products :products="products" v-else />
   </div>
 </template>
 
 <script setup>
-import products from "./../services/products";
+import { getData } from "../services/getData";
 import Products from "./../components/Products.vue";
-import { ref } from "vue";
+import Spinner from "../components/Spinner.vue";
+import { onMounted, ref } from "vue";
 
-const isShowProduct = ref(false);
-const showProducts = () => {
-  isShowProduct.value = !isShowProduct.value;
-};
+const products = ref([]);
+const loading = ref(true);
+
+onMounted(async () => {
+  try {
+    products.value = await getData();
+  } finally {
+    loading.value = false;
+  }
+});
 </script>
 
 <style lang="scss" scoped></style>

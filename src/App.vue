@@ -1,12 +1,16 @@
 <template>
-  <main>
-    <MainPage />
-  </main>
+  <div class="app">
+    <Layout></Layout>
+  </div>
 </template>
 
 <script setup>
-import MainPage from "./pages/MainPage.vue";
-
+import Layout from './components/Layout.vue'
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+</style>
