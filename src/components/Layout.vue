@@ -1,8 +1,8 @@
 <template>
   <div class="layout">
-    <Header></Header>
+    <Header @searchProductEmit="searchProductEmit"></Header>
     <main class="content">
-      <MainPage></MainPage>
+      <MainPage :searchProduct="searchProduct"></MainPage>
     </main>
     <Footer></Footer>
   </div>
@@ -12,6 +12,13 @@
 import MainPage from "../pages/MainPage.vue";
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
+import { ref } from "vue";
+
+const searchProduct = ref("");
+
+const searchProductEmit = (data) => {
+  searchProduct.value = data;
+};
 </script>
 
 <style lang="scss" scoped>

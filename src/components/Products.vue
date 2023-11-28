@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="products">
     <ProductItem
       :product="product"
       v-for="product in props.products"
@@ -18,4 +18,11 @@ const props = defineProps({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.products {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+</style>

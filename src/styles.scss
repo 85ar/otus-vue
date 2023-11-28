@@ -1,4 +1,5 @@
 @import './styles/normalize.scss';
+@import './styles/variables.scss';
 
 * {
   box-sizing: border-box;
@@ -7,15 +8,15 @@
   border: 0;
 }
 
-.img {
+img {
   display: block;
 }
 
-.ul {
+ul {
   list-style: none;
 }
 
-.a {
+a {
   text-decoration: none;
 }
 
