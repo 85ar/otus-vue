@@ -1,15 +1,23 @@
 <template>
   <div>
-    <span class="title">Product list</span>
-
-    <div v-if="loading">
-      <Spinner />
-    </div>
-    <Products
-      :products="filteredProducts"
-      v-else-if="filteredProducts.length !== 0"
+    <ShoppingCart
+      :orders="orders"
+      v-if="orders.length !== 0"
+      @removeOrderEmit="removeOrderEmit"
     />
-    <div v-else class="message">Not founded</div>
+    <div>
+      <p class="title">Product list</p>
+      <div v-if="loading">
+        <Spinner />
+      </div>
+      <Products
+        @orderFinallyEmit="orderFinallyEmitValue"
+        :products="filteredProducts"
+        v-else-if="filteredProducts.length !== 0"
+        :deleteOrder="deleteOrder"
+      />
+      <div v-else class="message">Not founded</div>
+    </div>
   </div>
 </template>
 
@@ -18,15 +26,22 @@ import { getData } from "../services/getData";
 import Products from "./../components/Products.vue";
 import Spinner from "../components/Spinner.vue";
 import { onMounted, ref, watch } from "vue";
+import ShoppingCart from "./ShoppingCart.vue";
 
 const products = ref([]);
 const loading = ref(true);
-
+const orders = ref([]);
+const deleteOrder = ref();
+const emit = defineEmits();
 const props = defineProps({
   searchProduct: {
     type: String,
   },
 });
+
+const removeOrderEmit = (data) => {
+  deleteOrder.value = data;
+};
 
 const filteredProducts = ref([]);
 
@@ -49,16 +64,26 @@ watch(() => props.searchProduct, updateProducts);
 // ищем товар
 const searchProductHandler = (search) => {
   return products.value.filter((product) => {
-    return product.title.toLowerCase().includes(search.toLowerCase());
+    const searchLower = search.toLowerCase();
+    const titleMatch = product.title.toLowerCase().includes(searchLower);
+    const priceMatch = String(product.price).includes(searchLower);
+    return titleMatch || priceMatch;
   });
+};
+
+const orderFinallyEmitValue = (data) => {
+  orders.value = data;
+  emit("ordersCount", data.length);
 };
 </script>
 
 <style lang="scss" scoped>
 .title {
-  font-size: 20px;
+  font-size: 18px;
   margin-bottom: 10px;
-  border-bottom: 1px solid $accent;
+  text-decoration: underline;
+  text-decoration-color: $accent;
+  text-underline-offset: 6px;
   margin-left: 20px;
 }
 .message {

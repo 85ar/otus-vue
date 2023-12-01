@@ -4,18 +4,33 @@
       <img :src="props.product.image" alt="img" class="img" />
     </div>
     <div class="infoBlock">
-      <p class="title">{{ props.product.title }}</p>
-      <span class="price">Price: {{ props.product.price }}</span>
+      <div class="title">{{ props.product.title }}</div>
+      <div class="priceBlock">
+        <div class="price">
+          Price:
+          <span class="priceValue">{{ props.product.price }} $</span>
+        </div>
+
+        <button class="buyBtn" @click="addProductToBusket(props.product)">Add to cart
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
+const emit = defineEmits();
+
 const props = defineProps({
   product: {
     type: Object,
   },
 });
+
+const addProductToBusket = (product) => {
+  emit("productOrderEmit", product);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -27,13 +42,20 @@ const props = defineProps({
   filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.15));
   background: $primary;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card:hover {
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.35));
+  cursor: pointer;
 }
 .imageBlock {
   width: 170px;
   height: 170px;
   display: flex;
   margin: 0 auto;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 .img {
   object-fit: contain;
@@ -46,10 +68,18 @@ const props = defineProps({
   justify-content: space-between;
   // min-height: 115px;
 }
-.price {
-  font-size: 12px;
-  margin-bottom: 6px;
+.priceBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+.price {
+  font-size: 14px;
+}
+.priceValue {
+  color: $third;
+}
+
 .title {
   text-align: center;
   font-size: 16px;
@@ -59,4 +89,17 @@ const props = defineProps({
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.buyBtn {
+  background-color: $accent;
+  padding: 6px 8px;
+  color: $primary;
+  border-radius: 4px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+.buyBtn:hover {
+  background-color: $third;
+}
+
 </style>

@@ -1,8 +1,14 @@
 <template>
   <div class="layout">
-    <Header @searchProductEmit="searchProductEmit"></Header>
+    <Header
+      @searchProductEmit="searchProductEmit"
+      :orderCounts="orderCounts"
+    ></Header>
     <main class="content">
-      <MainPage :searchProduct="searchProduct"></MainPage>
+      <MainPage
+        :searchProduct="searchProduct"
+        @ordersCount="ordersCountValue"
+      ></MainPage>
     </main>
     <Footer></Footer>
   </div>
@@ -15,7 +21,11 @@ import Footer from "./Footer.vue";
 import { ref } from "vue";
 
 const searchProduct = ref("");
+const orderCounts = ref();
 
+const ordersCountValue = (data) => {
+  orderCounts.value = data;
+};
 const searchProductEmit = (data) => {
   searchProduct.value = data;
 };
