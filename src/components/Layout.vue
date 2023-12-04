@@ -3,11 +3,13 @@
     <Header
       @searchProductEmit="searchProductEmit"
       :orderCounts="orderCounts"
+      @openShoppingCart="openShoppingCart"
     ></Header>
     <main class="content">
       <MainPage
         :searchProduct="searchProduct"
         @ordersCount="ordersCountValue"
+        :openCart="openCart"
       ></MainPage>
     </main>
     <Footer></Footer>
@@ -22,12 +24,16 @@ import { ref } from "vue";
 
 const searchProduct = ref("");
 const orderCounts = ref();
-
+const openCart = ref();
 const ordersCountValue = (data) => {
   orderCounts.value = data;
 };
 const searchProductEmit = (data) => {
   searchProduct.value = data;
+};
+
+const openShoppingCart = (data) => {
+  openCart.value = data;
 };
 </script>
 

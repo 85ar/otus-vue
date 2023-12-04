@@ -11,7 +11,12 @@
           <span class="priceValue">{{ props.product.price }} $</span>
         </div>
 
-        <button class="buyBtn" @click="addProductToBusket(props.product)">Add to cart
+        <button
+          :class="{ buyBtn: !isInCart, inCartBtn: isInCart }"
+          @click="addProductToBusket(props.product)"
+          :disabled="isInCart"
+        >
+          {{ isInCart ? "In cart" : "Add to cart" }}
         </button>
       </div>
     </div>
@@ -21,6 +26,7 @@
 <script setup>
 import { ref } from "vue";
 const emit = defineEmits();
+const isInCart = ref(false);
 
 const props = defineProps({
   product: {
@@ -30,6 +36,7 @@ const props = defineProps({
 
 const addProductToBusket = (product) => {
   emit("productOrderEmit", product);
+  isInCart.value = true;
 };
 </script>
 
@@ -66,7 +73,6 @@ const addProductToBusket = (product) => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  // min-height: 115px;
 }
 .priceBlock {
   display: flex;
@@ -89,17 +95,26 @@ const addProductToBusket = (product) => {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 .buyBtn {
-  background-color: $accent;
   padding: 6px 8px;
   color: $primary;
   border-radius: 4px;
   font-size: 14px;
   display: flex;
   align-items: center;
+  background-color: $accent;
 }
 .buyBtn:hover {
   background-color: $third;
 }
-
+.inCartBtn {
+  padding: 6px 8px;
+  color: $primary;
+  border-radius: 4px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  background-color: $third;
+}
 </style>

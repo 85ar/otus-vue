@@ -45,7 +45,7 @@ import { AnOutlinedSearch } from "@kalimahapps/vue-icons";
 import { AnOutlinedUser } from "@kalimahapps/vue-icons";
 
 const searchProduct = ref("");
-
+const isOpenShoppingCart = ref(false);
 const emit = defineEmits();
 const props = defineProps(["orderCounts"]);
 const searchProductHandler = () => {
@@ -53,7 +53,8 @@ const searchProductHandler = () => {
 };
 
 const shoppingCartHandler = () => {
-  console.log("click");
+  isOpenShoppingCart.value = !(isOpenShoppingCart.value);
+  emit("openShoppingCart", isOpenShoppingCart.value);
 };
 const loginHandler = () => {
   console.log("login");

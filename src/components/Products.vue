@@ -11,33 +11,28 @@
 
 <script setup>
 import ProductItem from "./ProductItem.vue";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 const order = ref([]);
 
 const props = defineProps({
   products: {
     type: Array,
   },
-  deleteOrder: {
-    type: Object,
-  },
 });
 const emit = defineEmits();
 const productOrder = (data) => {
-  order.value.push(data);
-  emit("orderFinallyEmit", order.value);
+  // проверка, есть ли товар в корзине
+  const orderExistIndex = order.value.findIndex((item) => item.id === data.id);
+  //если его там еще нет, то добавляем его
+  if (orderExistIndex === -1) {
+    order.value.push({ ...data, quantity: 1 });
+    emit("orderFinallyEmit", order.value);
+  } else {
+    // если товар уже есть в корзине, то увеличиваем количество
+    order.value[orderExistIndex].quantity++;
+  }
 };
 
-const deleteOrderWatch = () => {
-  console.log("valueDelete", props.deleteOrder);
-  const newOrder = order.value.filter((order) => {
-    order.id !== props.deleteOrder.id;
-  });
-  emit("orderFinallyEmit", newOrder);
-
-};
-
-watch(() => props.deleteOrder, deleteOrderWatch);
 </script>
 
 <style lang="scss" scoped>

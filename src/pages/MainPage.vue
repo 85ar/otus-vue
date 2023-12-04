@@ -2,10 +2,10 @@
   <div>
     <ShoppingCart
       :orders="orders"
-      v-if="orders.length !== 0"
-      @removeOrderEmit="removeOrderEmit"
+      @deleteOrderEmit="deleteOrderEmit"
+      v-if="props.openCart"
     />
-    <div>
+    <div v-else>
       <p class="title">Product list</p>
       <div v-if="loading">
         <Spinner />
@@ -14,7 +14,6 @@
         @orderFinallyEmit="orderFinallyEmitValue"
         :products="filteredProducts"
         v-else-if="filteredProducts.length !== 0"
-        :deleteOrder="deleteOrder"
       />
       <div v-else class="message">Not founded</div>
     </div>
@@ -31,17 +30,15 @@ import ShoppingCart from "./ShoppingCart.vue";
 const products = ref([]);
 const loading = ref(true);
 const orders = ref([]);
-const deleteOrder = ref();
 const emit = defineEmits();
 const props = defineProps({
   searchProduct: {
     type: String,
   },
+  openCart: {
+    type: Boolean,
+  },
 });
-
-const removeOrderEmit = (data) => {
-  deleteOrder.value = data;
-};
 
 const filteredProducts = ref([]);
 
@@ -74,6 +71,11 @@ const searchProductHandler = (search) => {
 const orderFinallyEmitValue = (data) => {
   orders.value = data;
   emit("ordersCount", data.length);
+};
+
+const deleteOrderEmit = (order) => {
+  orders.value = orders.value.filter((item) => item.id !== order.id);
+  emit("ordersCount", orders.value.length);
 };
 </script>
 
