@@ -5,7 +5,9 @@
       <nav class="nav">
         <ul class="ul">
           <li class="li">
-            <a class="link" href="*">Add new product</a>
+            <button class="link" @click="newProductHandler">
+              Add new product
+            </button>
           </li>
           <li class="li">
             <a class="link" href="*">All products</a>
@@ -46,6 +48,7 @@ import { AnOutlinedUser } from "@kalimahapps/vue-icons";
 
 const searchProduct = ref("");
 const isOpenShoppingCart = ref(false);
+const isOpenAddNewProduct = ref(false);
 const emit = defineEmits();
 const props = defineProps(["orderCounts"]);
 const searchProductHandler = () => {
@@ -53,12 +56,18 @@ const searchProductHandler = () => {
 };
 
 const shoppingCartHandler = () => {
-  isOpenShoppingCart.value = !(isOpenShoppingCart.value);
+  isOpenShoppingCart.value = !isOpenShoppingCart.value;
   emit("openShoppingCart", isOpenShoppingCart.value);
 };
 const loginHandler = () => {
   console.log("login");
 };
+
+const newProductHandler = () => {
+  isOpenAddNewProduct.value = !isOpenAddNewProduct.value;
+  emit("openAddNewProduct", isOpenAddNewProduct.value);
+};
+
 </script>
 
 <style lang="scss" scoped>

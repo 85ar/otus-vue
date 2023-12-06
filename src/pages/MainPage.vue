@@ -1,9 +1,10 @@
 <template>
   <div>
+    <AddNewProduct v-if="props.openNewProduct" @addProductEmit="addProductEmit"/>
     <ShoppingCart
       :orders="orders"
       @deleteOrderEmit="deleteOrderEmit"
-      v-if="props.openCart"
+      v-else-if="props.openCart"
     />
     <div v-else>
       <p class="title">Product list</p>
@@ -26,6 +27,7 @@ import Products from "./../components/Products.vue";
 import Spinner from "../components/Spinner.vue";
 import { onMounted, ref, watch } from "vue";
 import ShoppingCart from "./ShoppingCart.vue";
+import AddNewProduct from "../components/AddNewProduct.vue";
 
 const products = ref([]);
 const loading = ref(true);
@@ -36,6 +38,9 @@ const props = defineProps({
     type: String,
   },
   openCart: {
+    type: Boolean,
+  },
+  openNewProduct: {
     type: Boolean,
   },
 });
@@ -66,6 +71,12 @@ const searchProductHandler = (search) => {
     const priceMatch = String(product.price).includes(searchLower);
     return titleMatch || priceMatch;
   });
+};
+
+const addProductEmit = (data) => {
+  console.log('data', data);
+  console.log(' filteredProducts.value',  filteredProducts.value);
+   filteredProducts.value = filteredProducts.value.push(data);
 };
 
 const orderFinallyEmitValue = (data) => {
