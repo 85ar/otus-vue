@@ -1,11 +1,13 @@
 <template>
   <div class="app">
-    <Layout></Layout>
+    <Layout>
+      <router-view />
+    </Layout>
   </div>
 </template>
 
 <script setup>
-import Layout from './components/Layout.vue'
+import Layout from "./components/Layout.vue";
 </script>
 
 <style lang="scss" scoped>

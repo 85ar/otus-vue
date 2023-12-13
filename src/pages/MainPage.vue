@@ -1,7 +1,7 @@
 <template>
   <div>
     <AddNewProduct v-if="props.openNewProduct" @addProductEmit="addProductEmit"/>
-    <ShoppingCart
+    <ShoppingCartPage
       :orders="orders"
       @deleteOrderEmit="deleteOrderEmit"
       v-else-if="props.openCart"
@@ -26,7 +26,7 @@ import { getData } from "../services/getData";
 import Products from "./../components/Products.vue";
 import Spinner from "../components/Spinner.vue";
 import { onMounted, ref, watch } from "vue";
-import ShoppingCart from "./ShoppingCart.vue";
+import ShoppingCartPage from "./ShoppingCartPage.vue";
 import AddNewProduct from "../components/AddNewProduct.vue";
 
 const products = ref([]);

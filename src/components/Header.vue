@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <a href="/" class="logo">Shop</a>
+    <router-link to="/" class="logo">Shop</router-link>
     <div class="headerBlock">
       <nav class="nav">
         <ul class="ul">
@@ -10,10 +10,10 @@
             </button>
           </li>
           <li class="li">
-            <a class="link" href="*">All products</a>
+            <router-link class="link" to="/">All products</router-link>
           </li>
           <li class="li">
-            <a class="link" href="*">About us</a>
+            <router-link class="link" to="/about">About us</router-link>
           </li>
         </ul>
       </nav>
