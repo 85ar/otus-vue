@@ -7,19 +7,15 @@
       @openAddNewProduct="openAddNewProduct"
     ></Header>
     <main class="content">
-      <MainPage
-        :searchProduct="searchProduct"
-        @ordersCount="ordersCountValue"
-        :openCart="openCart"
-        :openNewProduct="openNewProduct"
-      ></MainPage>
+      <slot
+
+      ></slot>
     </main>
     <Footer></Footer>
   </div>
 </template>
 
 <script setup>
-import MainPage from "../pages/MainPage.vue";
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
 import { ref } from "vue";
@@ -42,7 +38,6 @@ const openShoppingCart = (data) => {
 const openAddNewProduct = (data) => {
   openNewProduct.value = data;
 };
-
 </script>
 
 <style lang="scss" scoped>

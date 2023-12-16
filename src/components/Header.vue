@@ -5,9 +5,9 @@
       <nav class="nav">
         <ul class="ul">
           <li class="li">
-            <button class="link" @click="newProductHandler">
+            <router-link class="link" to="/new-product" @click="newProductHandler">
               Add new product
-            </button>
+            </router-link>
           </li>
           <li class="li">
             <router-link class="link" to="/">All products</router-link>

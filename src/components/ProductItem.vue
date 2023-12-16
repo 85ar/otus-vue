@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" @click="openProductDetail(props.product)">
     <div class="imageBlock">
       <img :src="props.product.image" alt="img" class="img" />
     </div>
@@ -25,6 +25,8 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const emit = defineEmits();
 const isInCart = ref(false);
 
@@ -37,6 +39,12 @@ const props = defineProps({
 const addProductToBusket = (product) => {
   emit("productOrderEmit", product);
   isInCart.value = true;
+};
+
+const openProductDetail = (product) => {
+  router.push({
+    name: 'product', params: { productId: product.id }
+  });
 };
 </script>
 

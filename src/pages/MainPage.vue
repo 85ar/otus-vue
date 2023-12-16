@@ -1,23 +1,11 @@
 <template>
   <div>
-    <AddNewProduct v-if="props.openNewProduct" @addProductEmit="addProductEmit"/>
-    <ShoppingCartPage
-      :orders="orders"
-      @deleteOrderEmit="deleteOrderEmit"
-      v-else-if="props.openCart"
-    />
-    <div v-else>
-      <p class="title">Product list</p>
-      <div v-if="loading">
-        <Spinner />
-      </div>
-      <Products
-        @orderFinallyEmit="orderFinallyEmitValue"
-        :products="filteredProducts"
-        v-else-if="filteredProducts.length !== 0"
-      />
-      <div v-else class="message">Not founded</div>
+    <p class="title">Product list</p>
+    <div v-if="loading">
+      <Spinner />
     </div>
+    <Products :products="products" v-else="filteredProducts.length !== 0" />
+    <!-- <div v-else class="message">Not founded</div> -->
   </div>
 </template>
 
@@ -26,8 +14,6 @@ import { getData } from "../services/getData";
 import Products from "./../components/Products.vue";
 import Spinner from "../components/Spinner.vue";
 import { onMounted, ref, watch } from "vue";
-import ShoppingCartPage from "./ShoppingCartPage.vue";
-import AddNewProduct from "../components/AddNewProduct.vue";
 
 const products = ref([]);
 const loading = ref(true);
@@ -74,9 +60,9 @@ const searchProductHandler = (search) => {
 };
 
 const addProductEmit = (data) => {
-  console.log('data', data);
-  console.log(' filteredProducts.value',  filteredProducts.value);
-   filteredProducts.value = filteredProducts.value.push(data);
+  console.log("data", data);
+  console.log(" filteredProducts.value", filteredProducts.value);
+  filteredProducts.value = filteredProducts.value.push(data);
 };
 
 const orderFinallyEmitValue = (data) => {
