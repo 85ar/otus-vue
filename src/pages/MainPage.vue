@@ -4,8 +4,8 @@
     <div v-if="loading">
       <Spinner />
     </div>
-    <Products :products="products" v-else="filteredProducts.length !== 0" />
-    <!-- <div v-else class="message">Not founded</div> -->
+    <Products :products="filteredProducts" v-else-if="filteredProducts.length !== 0" @orderFinallyEmit="orderFinallyEmit" />
+    <div v-else class="message">Not founded</div>
   </div>
 </template>
 
@@ -13,21 +13,20 @@
 import { getData } from "../services/getData";
 import Products from "./../components/Products.vue";
 import Spinner from "../components/Spinner.vue";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, watchEffect } from "vue";
 
 const products = ref([]);
 const loading = ref(true);
 const orders = ref([]);
 const emit = defineEmits();
+
+
 const props = defineProps({
   searchProduct: {
     type: String,
   },
-  openCart: {
-    type: Boolean,
-  },
-  openNewProduct: {
-    type: Boolean,
+  deleteOrders: {
+    type: Array,
   },
 });
 
@@ -45,9 +44,18 @@ onMounted(async () => {
 const updateProducts = () => {
   filteredProducts.value = searchProductHandler(props.searchProduct);
 };
+const deleteOrder = () => {
+  orders.value = orders.value.filter((item) => !props.deleteOrders.some(deleteItem => deleteItem.id === item.id));
+  emit("ordersEmit", orders.value);
+  console.log('delete Main');
+};
 
 // следим за строкой поиска и запускаем фильтрацию если надо
 watch(() => props.searchProduct, updateProducts);
+
+// следим за удалением товаров из корзины
+watch(() => props.deleteOrders, deleteOrder);
+
 
 // ищем товар
 const searchProductHandler = (search) => {
@@ -59,21 +67,17 @@ const searchProductHandler = (search) => {
   });
 };
 
-const addProductEmit = (data) => {
-  console.log("data", data);
-  console.log(" filteredProducts.value", filteredProducts.value);
-  filteredProducts.value = filteredProducts.value.push(data);
-};
+// const addProductEmit = (data) => {
+//   console.log("data", data);
+//   console.log(" filteredProducts.value", filteredProducts.value);
+//   filteredProducts.value = filteredProducts.value.push(data);
+// };
 
-const orderFinallyEmitValue = (data) => {
+const orderFinallyEmit = (data) => {
   orders.value = data;
-  emit("ordersCount", data.length);
+  emit("ordersEmit", orders.value);
 };
 
-const deleteOrderEmit = (order) => {
-  orders.value = orders.value.filter((item) => item.id !== order.id);
-  emit("ordersCount", orders.value.length);
-};
 </script>
 
 <style lang="scss" scoped>

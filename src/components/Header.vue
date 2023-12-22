@@ -5,7 +5,7 @@
       <nav class="nav">
         <ul class="ul">
           <li class="li">
-            <router-link class="link" to="/new-product" @click="newProductHandler">
+            <router-link class="link" to="/new-product">
               Add new product
             </router-link>
           </li>
@@ -28,12 +28,20 @@
         <div class="searchIcon"><AnOutlinedSearch /></div>
       </div>
       <div class="btnsGroup">
-        <button @click="loginHandler" class="loginBtn">
-          <AnOutlinedUser class="userIcon" />
-        </button>
-        <button @click="shoppingCartHandler" class="shoppingBtn">
+        <div>
+          <AnOutlinedUser
+            :class="{
+              userInIcon: isAuthenticated,
+              userOutIcon: !isAuthenticated,
+            }"
+          />
+        </div>
+        <router-link to="/shopping-cart" class="shoppingBtn">
           <CaShoppingCart class="shoppingIcon" />
           <span class="orderCount">{{ props.orderCounts }}</span>
+        </router-link>
+        <button @click="logout" class="logoutBtn">
+          <IoOutlineLogOut class="logoutIcon" />
         </button>
       </div>
     </div>
@@ -41,33 +49,37 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { CaShoppingCart } from "@kalimahapps/vue-icons";
 import { AnOutlinedSearch } from "@kalimahapps/vue-icons";
 import { AnOutlinedUser } from "@kalimahapps/vue-icons";
+import { IoOutlineLogOut } from "@kalimahapps/vue-icons";
 
+import { useRouter } from "vue-router";
+const router = useRouter();
+const isAuthenticated = ref(localStorage.getItem("authenticated"));
 const searchProduct = ref("");
-const isOpenShoppingCart = ref(false);
-const isOpenAddNewProduct = ref(false);
 const emit = defineEmits();
 const props = defineProps(["orderCounts"]);
+
 const searchProductHandler = () => {
   emit("searchProductEmit", searchProduct.value);
 };
 
-const shoppingCartHandler = () => {
-  isOpenShoppingCart.value = !isOpenShoppingCart.value;
-  emit("openShoppingCart", isOpenShoppingCart.value);
-};
-const loginHandler = () => {
-  console.log("login");
+const logout = () => {
+  localStorage.setItem("authenticated", "false");
+  router.push("/login");
 };
 
-const newProductHandler = () => {
-  isOpenAddNewProduct.value = !isOpenAddNewProduct.value;
-  emit("openAddNewProduct", isOpenAddNewProduct.value);
+const logoutFunc = () => {
+  if (localStorage.getItem("authenticated")) {
+    isAuthenticated.value = true;
+  } else {
+    isAuthenticated.value = false;
+  }
 };
 
+watch(() => isAuthenticated, logoutFunc);
 </script>
 
 <style lang="scss" scoped>
@@ -126,13 +138,28 @@ const newProductHandler = () => {
   height: 1.5em;
   color: $secondary;
 }
-.userIcon {
+
+.userInIcon {
+  width: 1.5em;
+  height: 1.5em;
+  color: $accent;
+}
+.userOutIcon {
+  width: 1.5em;
+  height: 1.5em;
+  color: $secondary;
+}
+.logoutIcon {
   width: 1.5em;
   height: 1.5em;
   color: $secondary;
 }
 .loginBtn {
   display: flex;
+}
+.logoutBtn {
+  display: flex;
+  margin-left: 10px;
 }
 .orderCount {
   color: $accent;

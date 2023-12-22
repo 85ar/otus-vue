@@ -13,7 +13,7 @@
 
         <button
           :class="{ buyBtn: !isInCart, inCartBtn: isInCart }"
-          @click="addProductToBusket(props.product)"
+          @click.stop="addProductToBusket(props.product)"
           :disabled="isInCart"
         >
           {{ isInCart ? "In cart" : "Add to cart" }}

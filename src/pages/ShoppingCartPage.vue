@@ -125,6 +125,7 @@ const props = defineProps({
 });
 
 const removeOrder = (order) => {
+  console.log('delete Shopping', order);
   emit("deleteOrderEmit", order);
 };
 </script>
