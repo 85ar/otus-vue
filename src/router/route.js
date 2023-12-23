@@ -38,7 +38,11 @@ const routes = [
     name: "shoppingCart",
     meta: { requiresAuth: true },
   },
-  { path: "/:pathMatch(.*)*", component: PathNotFoundPage },
+  {
+    path: "/:pathMatch(.*)*",
+    component: PathNotFoundPage,
+    name: "notFoundPage",
+  },
 ];
 
 const router = createRouter({
@@ -57,17 +61,5 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-
-// для редиректа на страницу авторизации
-let firstLoad = true;
-router.beforeEach((to, from, next) => {
-  if (firstLoad && to.path !== "/login") {
-    firstLoad = false;
-    next("/login");
-  } else {
-    next();
-  }
-});
-
 
 export default router;

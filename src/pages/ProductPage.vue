@@ -1,54 +1,58 @@
 <template>
-  <div class="card" v-if="product">
-    <div class="imageBlock">
-      <img :src="product.image" alt="img" class="img" />
+  <div>
+    <div v-if="loading">
+      <Spinner />
     </div>
-
-    <div class="infoBlock">
-      <div class="title">{{ product.title }}</div>
-      <div class="description">{{ product.description }}</div>
-      <div class="category">Category: {{ product.category }}</div>
-      <div class="count">Count: {{ product.rating.count }}</div>
-      <div class="priceBlock">
-        <div class="price">
-          Price:
-          <span class="priceValue">{{ product.price }} $</span>
+    <div class="card" v-else-if="productItem">
+      <div class="imageBlock">
+        <img :src="productItem.image" alt="img" class="img" />
+      </div>
+      <div class="infoBlock">
+        <div class="title">{{ productItem.title }}</div>
+        <div class="description">{{ productItem.description }}</div>
+        <div class="category">Category: {{ productItem.category }}</div>
+        <div class="count">Count: {{ productItem.rating?.count }}</div>
+        <div class="priceBlock">
+          <div class="price">
+            Price:
+            <span class="priceValue">{{ productItem.price }} $</span>
+          </div>
+          <button
+            :class="{ buyBtn: !isInCart, inCartBtn: isInCart }"
+            @click="addProductToBusket(productItem)"
+            :disabled="isInCart"
+          >
+            {{ isInCart ? "In cart" : "Add to cart" }}
+          </button>
         </div>
-        <button
-          :class="{ buyBtn: !isInCart, inCartBtn: isInCart }"
-          @click="addProductToBusket(product)"
-          :disabled="isInCart"
-        >
-          {{ isInCart ? "In cart" : "Add to cart" }}
-        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
-import { getProduct } from "./../services/getProduct";
+import { useShopStore } from "../store/shopStore";
+import { storeToRefs } from "pinia";
+import Spinner from "../components/Spinner.vue";
 
-const emit = defineEmits();
+const shopStore = useShopStore();
+const { productItem } = storeToRefs(shopStore);
 const isInCart = ref(false);
 const route = useRoute();
-const product = ref();
+const loading = ref(true);
 
 onMounted(async () => {
-  try {
-    const data = await getProduct(route.params.productId);
-    if (data) {
-      product.value = data;
-    }
-  } catch (error) {
-    console.log("error", error);
-  }
+  await shopStore.fetchProductById(route.params.productId);
+  loading.value = false;
 });
 
-const addProductToBusket = (product) => {
-  emit("productOrderEmit", product);
+onUnmounted(() => {
+  shopStore.resetProductItem();
+});
+
+const addProductToBusket = () => {
   isInCart.value = true;
 };
 </script>

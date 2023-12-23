@@ -27,7 +27,6 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
-const emit = defineEmits();
 const isInCart = ref(false);
 
 const props = defineProps({
@@ -37,13 +36,13 @@ const props = defineProps({
 });
 
 const addProductToBusket = (product) => {
-  emit("productOrderEmit", product);
   isInCart.value = true;
 };
 
 const openProductDetail = (product) => {
   router.push({
-    name: 'product', params: { productId: product.id }
+    name: "product",
+    params: { productId: product.id },
   });
 };
 </script>

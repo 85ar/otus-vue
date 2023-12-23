@@ -83,7 +83,6 @@
 import { ref } from "vue";
 import * as Yup from "yup";
 
-const emit = defineEmits();
 const title = ref("");
 const price = ref("");
 const description = ref("");
@@ -141,7 +140,7 @@ const addProduct = async () => {
       },
     };
 
-    emit("addProductEmit", newProduct);
+
     // console.log("newProduct", newProduct);
 
     title.value = "";

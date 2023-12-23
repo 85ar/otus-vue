@@ -10,9 +10,6 @@
             </router-link>
           </li>
           <li class="li">
-            <router-link class="link" to="/">All products</router-link>
-          </li>
-          <li class="li">
             <router-link class="link" to="/about">About us</router-link>
           </li>
         </ul>
@@ -28,17 +25,24 @@
         <div class="searchIcon"><AnOutlinedSearch /></div>
       </div>
       <div class="btnsGroup">
-        <div>
+        <div class="userBtn">
           <AnOutlinedUser
             :class="{
-              userInIcon: isAuthenticated,
-              userOutIcon: !isAuthenticated,
+              userInIcon: shopStore.isAuthValue,
+              userOutIcon: !shopStore.isAuthValue,
             }"
           />
+          <span
+            :class="{
+              userIn: shopStore.isAuthValue,
+              userOut: !shopStore.isAuthValue,
+            }"
+            >{{ shopStore.isAuthValue ? "user" : "guest" }}</span
+          >
         </div>
         <router-link to="/shopping-cart" class="shoppingBtn">
           <CaShoppingCart class="shoppingIcon" />
-          <span class="orderCount">{{ props.orderCounts }}</span>
+          <span v-if="shopStore.ordersCount" class="orderCount">{{ shopStore.ordersCount }}</span>
         </router-link>
         <button @click="logout" class="logoutBtn">
           <IoOutlineLogOut class="logoutIcon" />
@@ -49,37 +53,26 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { CaShoppingCart } from "@kalimahapps/vue-icons";
 import { AnOutlinedSearch } from "@kalimahapps/vue-icons";
 import { AnOutlinedUser } from "@kalimahapps/vue-icons";
 import { IoOutlineLogOut } from "@kalimahapps/vue-icons";
-
 import { useRouter } from "vue-router";
-const router = useRouter();
-const isAuthenticated = ref(localStorage.getItem("authenticated"));
-const searchProduct = ref("");
-const emit = defineEmits();
-const props = defineProps(["orderCounts"]);
+import { useShopStore } from "../store/shopStore";
 
-const searchProductHandler = () => {
-  emit("searchProductEmit", searchProduct.value);
-};
+const shopStore = useShopStore();
+const router = useRouter();
+
+const searchProduct = ref("");
+
+const searchProductHandler = () => {};
 
 const logout = () => {
   localStorage.setItem("authenticated", "false");
   router.push("/login");
+  shopStore.getIsAuth(false);
 };
-
-const logoutFunc = () => {
-  if (localStorage.getItem("authenticated")) {
-    isAuthenticated.value = true;
-  } else {
-    isAuthenticated.value = false;
-  }
-};
-
-watch(() => isAuthenticated, logoutFunc);
 </script>
 
 <style lang="scss" scoped>
@@ -98,8 +91,10 @@ watch(() => isAuthenticated, logoutFunc);
 }
 .ul {
   display: flex;
-  min-width: 350px;
+  min-width: 230px;
   justify-content: space-between;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 .li {
   font-size: 16px;
@@ -114,7 +109,7 @@ watch(() => isAuthenticated, logoutFunc);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-width: 80%;
+  min-width: 65%;
 }
 .input {
   width: 220px;
@@ -128,6 +123,7 @@ watch(() => isAuthenticated, logoutFunc);
   border: 1px solid $additional;
   padding-left: 10px;
   padding-right: 10px;
+  margin-right: 10px;
 }
 .searchIcon {
   display: flex;
@@ -143,6 +139,12 @@ watch(() => isAuthenticated, logoutFunc);
   width: 1.5em;
   height: 1.5em;
   color: $accent;
+}
+.userIn {
+  color: $accent;
+}
+.userOut {
+  color: $secondary;
 }
 .userOutIcon {
   width: 1.5em;
@@ -165,8 +167,14 @@ watch(() => isAuthenticated, logoutFunc);
   color: $accent;
 }
 .shoppingBtn {
-  margin-left: 10px;
+  margin-left: 12px;
   display: flex;
+  align-items: flex-start;
+}
+.userBtn {
+  display: flex;
+  align-items: center;
+  color: $accent;
 }
 .btnsGroup {
   display: flex;

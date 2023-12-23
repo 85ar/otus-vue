@@ -16,10 +16,12 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useShopStore } from "../store/shopStore";
 
 const router = useRouter();
 const username = ref("");
 const password = ref("");
+const shopStore = useShopStore();
 
 const login = () => {
   // Проверка учетных данных (фейковая проверка)
@@ -28,6 +30,7 @@ const login = () => {
     localStorage.setItem("authenticated", "true");
     // Перенаправляем юзера на защищенную страницу (см. роутер)
     router.push("/");
+    shopStore.getIsAuth(true);
   } else {
     alert("Invalid username or password");
   }
