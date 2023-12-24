@@ -25,7 +25,7 @@
         <div class="searchIcon"><AnOutlinedSearch /></div>
       </div>
       <div class="btnsGroup">
-        <div class="userBtn">
+        <router-link to="/login" class="userBtn">
           <AnOutlinedUser
             :class="{
               userInIcon: shopStore.isAuthValue,
@@ -39,10 +39,12 @@
             }"
             >{{ shopStore.isAuthValue ? "user" : "guest" }}</span
           >
-        </div>
+        </router-link>
         <router-link to="/shopping-cart" class="shoppingBtn">
           <CaShoppingCart class="shoppingIcon" />
-          <span v-if="shopStore.ordersCount" class="orderCount">{{ shopStore.ordersCount }}</span>
+          <span v-if="shopStore.ordersCount" class="orderCount">{{
+            shopStore.ordersCount
+          }}</span>
         </router-link>
         <button @click="logout" class="logoutBtn">
           <IoOutlineLogOut class="logoutIcon" />
@@ -66,7 +68,9 @@ const router = useRouter();
 
 const searchProduct = ref("");
 
-const searchProductHandler = () => {};
+const searchProductHandler = () => {
+  shopStore.filterProducts(searchProduct.value);
+};
 
 const logout = () => {
   localStorage.setItem("authenticated", "false");

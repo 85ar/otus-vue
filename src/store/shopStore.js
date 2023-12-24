@@ -46,11 +46,31 @@ export const useShopStore = defineStore("shopStore", () => {
     return (isAuthValue.value = value);
   }
 
+  // удаление товара из корзины
+  function deleteOrder(id) {
+    if (id) {
+      orders.value = orders.value.filter((item) => item.id !== id);
+    }
+  }
+
+  // полная очистка корзины
+  function deleteAllOrders() {
+    orders.value = [];
+  }
+
   // getters
   // количество товаров в корзине
   const ordersCount = computed(() => orders.value.length);
 
-  const isLoading = ref(false);
+  // фильтр по названию товара
+  const filterProducts = computed((search) => {
+    return products.value.filter((product) => {
+      const searchLower = search.toLowerCase();
+      const titleMatch = product.title.toLowerCase().includes(searchLower);
+      const priceMatch = String(product.price).includes(searchLower);
+      return titleMatch || priceMatch;
+    });
+  });
 
   return {
     products,
@@ -61,8 +81,10 @@ export const useShopStore = defineStore("shopStore", () => {
     getIsAuth,
     isAuthValue,
     orders,
-    isLoading,
     productItem,
     ordersCount,
+    deleteOrder,
+    deleteAllOrders,
+    filterProducts,
   };
 });

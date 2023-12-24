@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="shopStore.isAuthValue">
     <p class="title">Product list</p>
     <div v-if="loading">
       <Spinner />
@@ -12,6 +12,11 @@
       />
     </div>
     <div v-else class="message">Not founded</div>
+  </div>
+  <div v-else class="loginPlease">Please log in
+
+
+    <router-link class="link" to="/login">Login</router-link>
   </div>
 </template>
 
@@ -50,5 +55,18 @@ onMounted(async () => {
   flex-wrap: wrap;
   justify-content: space-between;
   margin-top: 20px;
+}
+.loginPlease {
+  font-size: 36px;
+  text-align: center;
+  margin-top: 80px;
+  color: $third;
+}
+.link {
+  display: block;
+  margin-top: 20px;
+  font-size: 20px;
+  color: $accent;
+  text-decoration: underline;
 }
 </style>

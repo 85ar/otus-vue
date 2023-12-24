@@ -52,9 +52,21 @@ onUnmounted(() => {
   shopStore.resetProductItem();
 });
 
-const addProductToBusket = () => {
+const addProductToBusket = (product) => {
   isInCart.value = true;
+// проверка, есть ли товар в корзине
+  const orderExistIndex = shopStore.orders.findIndex((item) => item.id === product.id);
+  //если его там еще нет, то добавляем его
+  if (orderExistIndex === -1) {
+    shopStore.orders.push({ ...product, quantity: 1 });
+  } else {
+    // если товар уже есть в корзине, то увеличиваем количество
+    shopStore.orders[orderExistIndex].quantity++;
+  }
+
 };
+
+
 </script>
 
 <style lang="scss" scoped>

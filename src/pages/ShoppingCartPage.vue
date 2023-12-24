@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="title">My orders</p>
-    <div class="message" v-if="props.orders.length === 0">
+    <div class="message" v-if="shopStore.orders.length === 0">
       Shopping cart is empty
     </div>
     <div v-else>
@@ -16,20 +16,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="order in props.orders" :key="order.id">
+          <tr v-for="order in shopStore.orders" :key="order.id">
             <td>{{ order.id }}</td>
             <td>{{ order.title }}</td>
             <td>{{ order.price }} $</td>
             <td>{{ order.quantity }}</td>
             <td>
-              <button class="removeOrderBtn" @click="removeOrder(order)">
+              <button class="removeOrderBtn" @click="removeOrder(order.id)">
                 Remove
               </button>
             </td>
           </tr>
         </tbody>
       </table>
-
+      <button class="removeAllBtn" @click="removeAllOrders">Remove all</button>
       <p class="checkoutTitle">Checkout now</p>
 
       <form @submit.prevent="sendForm" class="form">
@@ -74,7 +74,10 @@ import axios from "axios";
 import { ref } from "vue";
 import * as Yup from "yup";
 import Spinner from "../components/Spinner.vue";
-const emit = defineEmits();
+import { useShopStore } from "../store/shopStore";
+
+const shopStore = useShopStore();
+
 const loading = ref(false);
 const name = ref("");
 const surname = ref("");
@@ -104,7 +107,7 @@ const sendForm = async () => {
     };
     const combinedData = {
       formData,
-      orders: props.orders,
+      orders: shopStore.orders,
     };
     const response = await axios.post("https://httpbin.org/post", combinedData);
     loading.value = false;
@@ -118,15 +121,12 @@ const sendForm = async () => {
   }
 };
 
-const props = defineProps({
-  orders: {
-    type: Array,
-  },
-});
+const removeOrder = (id) => {
+  shopStore.deleteOrder(id);
+};
 
-const removeOrder = (order) => {
-  console.log('delete Shopping', order);
-  emit("deleteOrderEmit", order);
+const removeAllOrders = () => {
+  shopStore.deleteAllOrders();
 };
 </script>
 
@@ -154,7 +154,7 @@ const removeOrder = (order) => {
 .checkoutTitle {
   font-size: 18px;
   margin-bottom: 20px;
-   text-decoration: underline;
+  text-decoration: underline;
   text-decoration-color: $third;
   text-underline-offset: 6px;
 }
@@ -180,6 +180,16 @@ td {
   border: none;
   padding: 5px 10px;
   border-radius: 4px;
+}
+.removeAllBtn {
+  cursor: pointer;
+  background-color: $third;
+  color: $primary;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: flex-end;
 }
 .message {
   display: flex;
@@ -208,7 +218,7 @@ td {
   display: flex;
   align-items: center;
   margin-top: 20px;
-justify-content: end;
+  justify-content: end;
 }
 .btn {
   cursor: pointer;

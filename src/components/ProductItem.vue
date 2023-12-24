@@ -26,6 +26,10 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useShopStore } from "../store/shopStore";
+
+const shopStore = useShopStore();
+
 const router = useRouter();
 const isInCart = ref(false);
 
@@ -37,6 +41,16 @@ const props = defineProps({
 
 const addProductToBusket = (product) => {
   isInCart.value = true;
+// проверка, есть ли товар в корзине
+  const orderExistIndex = shopStore.orders.findIndex((item) => item.id === product.id);
+  //если его там еще нет, то добавляем его
+  if (orderExistIndex === -1) {
+    shopStore.orders.push({ ...product, quantity: 1 });
+  } else {
+    // если товар уже есть в корзине, то увеличиваем количество
+    shopStore.orders[orderExistIndex].quantity++;
+  }
+
 };
 
 const openProductDetail = (product) => {
