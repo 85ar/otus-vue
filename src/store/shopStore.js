@@ -9,6 +9,7 @@ export const useShopStore = defineStore("shopStore", () => {
   const productsLoaded = ref(false);
   const isAuthValue = ref();
   const orders = ref([]);
+  const searchProduct = ref("");
 
   // actions
   // загрузка данных
@@ -58,19 +59,14 @@ export const useShopStore = defineStore("shopStore", () => {
     orders.value = [];
   }
 
+  // записываем поисковое значение в стор
+  function setSearchProduct(value) {
+    searchProduct.value = value;
+  }
+
   // getters
   // количество товаров в корзине
   const ordersCount = computed(() => orders.value.length);
-
-  // фильтр по названию товара
-  const filterProducts = computed((search) => {
-    return products.value.filter((product) => {
-      const searchLower = search.toLowerCase();
-      const titleMatch = product.title.toLowerCase().includes(searchLower);
-      const priceMatch = String(product.price).includes(searchLower);
-      return titleMatch || priceMatch;
-    });
-  });
 
   return {
     products,
@@ -85,6 +81,7 @@ export const useShopStore = defineStore("shopStore", () => {
     ordersCount,
     deleteOrder,
     deleteAllOrders,
-    filterProducts,
+    searchProduct,
+    setSearchProduct,
   };
 });

@@ -55,7 +55,10 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.getItem("authenticated") === "true";
 
   // Если маршрут защищенный и пользователь не аутентифицирован, перенаправляем на страницу входа
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (
+    (to.meta.requiresAuth && !isAuthenticated) ||
+    (!from.name && to.name !== "login")
+  ) {
     next("/login");
   } else {
     next();

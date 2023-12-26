@@ -23,7 +23,7 @@
             <td>{{ order.quantity }}</td>
             <td>
               <button class="removeOrderBtn" @click="removeOrder(order.id)">
-                Remove
+                <AnOutlinedDelete class="removeIcon" />
               </button>
             </td>
           </tr>
@@ -75,6 +75,7 @@ import { ref } from "vue";
 import * as Yup from "yup";
 import Spinner from "../components/Spinner.vue";
 import { useShopStore } from "../store/shopStore";
+import { AnOutlinedDelete } from "@kalimahapps/vue-icons";
 
 const shopStore = useShopStore();
 
@@ -175,11 +176,13 @@ td {
 }
 .removeOrderBtn {
   cursor: pointer;
-  background-color: $third;
-  color: $primary;
+  // background-color: $third;
+  // color: $primary;
   border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
+  // padding: 5px 10px;
+  // border-radius: 4px;
+  margin: 0 auto;
+  display: flex;
 }
 .removeAllBtn {
   cursor: pointer;
@@ -189,7 +192,7 @@ td {
   padding: 5px 10px;
   border-radius: 4px;
   display: flex;
-  justify-content: flex-end;
+  margin-left: auto;
 }
 .message {
   display: flex;
@@ -234,5 +237,10 @@ td {
 }
 .inputGroup {
   margin-bottom: 5px;
+}
+.removeIcon {
+  width: 1.2em;
+  height: 1.2em;
+  color: $secondary;
 }
 </style>

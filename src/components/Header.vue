@@ -69,7 +69,7 @@ const router = useRouter();
 const searchProduct = ref("");
 
 const searchProductHandler = () => {
-  shopStore.filterProducts(searchProduct.value);
+  shopStore.setSearchProduct(searchProduct.value);
 };
 
 const logout = () => {
