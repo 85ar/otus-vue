@@ -31,7 +31,7 @@
         <div class="labelGroup">
           <label>Category</label>
           <select v-model="category" class="select">
-            <option class="option" disabled selected >
+            <option class="option" disabled selected>
               Choose category ...
             </option>
             <option class="option" value="electronics">electronics</option>
@@ -82,6 +82,8 @@
 <script setup>
 import { ref } from "vue";
 import * as Yup from "yup";
+import { useShopStore } from "../store/shopStore";
+const shopStore = useShopStore();
 
 const title = ref("");
 const price = ref("");
@@ -140,8 +142,9 @@ const addProduct = async () => {
       },
     };
 
-
-    // console.log("newProduct", newProduct);
+    if (Object.values(newProduct).length > 0) {
+      shopStore.products.push(newProduct);
+    }
 
     title.value = "";
     price.value = "";

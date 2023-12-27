@@ -22,9 +22,12 @@
             <td>{{ order.price }} $</td>
             <td>{{ order.quantity }}</td>
             <td>
-              <button class="removeOrderBtn" @click="removeOrder(order.id)">
-                <AnOutlinedDelete class="removeIcon" />
-              </button>
+              <div>
+                <Toast :position="'bottom-center'" />
+                <button label="Success" severity="success" class="removeOrderBtn" @click="removeOrder(order.id)">
+                  <AnOutlinedDelete class="removeIcon" />
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -76,6 +79,9 @@ import * as Yup from "yup";
 import Spinner from "../components/Spinner.vue";
 import { useShopStore } from "../store/shopStore";
 import { AnOutlinedDelete } from "@kalimahapps/vue-icons";
+import { useToast } from "primevue/usetoast";
+
+const toast = useToast();
 
 const shopStore = useShopStore();
 
@@ -93,7 +99,6 @@ const schema = Yup.object().shape({
 });
 
 const errors = ref({ name: "", surname: "", email: "" });
-
 const sendForm = async () => {
   try {
     await schema.validate(
@@ -124,6 +129,11 @@ const sendForm = async () => {
 
 const removeOrder = (id) => {
   shopStore.deleteOrder(id);
+  toast.add({
+    severity: "info",
+    detail: "The order is delete",
+    life: 3000,
+  });
 };
 
 const removeAllOrders = () => {
@@ -176,11 +186,7 @@ td {
 }
 .removeOrderBtn {
   cursor: pointer;
-  // background-color: $third;
-  // color: $primary;
   border: none;
-  // padding: 5px 10px;
-  // border-radius: 4px;
   margin: 0 auto;
   display: flex;
 }
