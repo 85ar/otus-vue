@@ -13,6 +13,7 @@
             <th>Price</th>
             <th>Count</th>
             <th>Action</th>
+            <th>Price all</th>
           </tr>
         </thead>
         <tbody>
@@ -20,15 +21,27 @@
             <td>{{ order.id }}</td>
             <td>{{ order.title }}</td>
             <td>{{ order.price }} $</td>
-            <td>{{ order.quantity }}</td>
+            <!-- <td>{{ order.quantity }}</td> -->
+            <input
+              type="number"
+              v-model="order.quantity"
+              @input="updateQuantity(order)"
+              class="inputQuantity"
+            />
             <td>
               <div>
                 <Toast :position="'bottom-center'" />
-                <button label="Success" severity="success" class="removeOrderBtn" @click="removeOrder(order.id)">
+                <button
+                  label="Success"
+                  severity="success"
+                  class="removeOrderBtn"
+                  @click="removeOrder(order.id)"
+                >
                   <AnOutlinedDelete class="removeIcon" />
                 </button>
               </div>
             </td>
+            <td>{{ order.price * order.quantity }}</td>
           </tr>
         </tbody>
       </table>
@@ -139,6 +152,14 @@ const removeOrder = (id) => {
 const removeAllOrders = () => {
   shopStore.deleteAllOrders();
 };
+
+// Обработка изменения количества данного товара
+const updateQuantity = (order) => {
+  if (order.quantity < 1) {
+    // Не допускать количества менее 1
+    order.quantity = 1;
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -248,5 +269,10 @@ td {
   width: 1.2em;
   height: 1.2em;
   color: $secondary;
+}
+.inputQuantity {
+  padding: 8px;
+  text-align: left;
+  width: 100%;
 }
 </style>

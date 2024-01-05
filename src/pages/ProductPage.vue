@@ -23,6 +23,17 @@
             :disabled="isInCart"
           >
             {{ isInCart ? "In cart" : "Add to cart" }}
+            <div v-if="isInCart" class="quantityBlock">
+              <button @click.stop="decrementQuantity(productItem)">
+                <AkMinus class="minusIcon" />
+              </button>
+              <span class="quantity">{{
+                getProductQuantityInCart(productItem)
+              }}</span>
+              <button @click.stop="incrementQuantity(productItem)">
+                <AkPlus class="plusIcon" />
+              </button>
+            </div>
           </button>
         </div>
       </div>
@@ -35,6 +46,8 @@ import { onMounted, ref, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useShopStore } from "../store/shopStore";
 import { storeToRefs } from "pinia";
+import { AkPlus } from "@kalimahapps/vue-icons";
+import { AkMinus } from "@kalimahapps/vue-icons";
 import Spinner from "../components/Spinner.vue";
 
 const shopStore = useShopStore();
@@ -54,8 +67,10 @@ onUnmounted(() => {
 
 const addProductToBusket = (product) => {
   isInCart.value = true;
-// проверка, есть ли товар в корзине
-  const orderExistIndex = shopStore.orders.findIndex((item) => item.id === product.id);
+  // проверка, есть ли товар в корзине
+  const orderExistIndex = shopStore.orders.findIndex(
+    (item) => item.id === product.id,
+  );
   //если его там еще нет, то добавляем его
   if (orderExistIndex === -1) {
     shopStore.orders.push({ ...product, quantity: 1 });
@@ -63,10 +78,35 @@ const addProductToBusket = (product) => {
     // если товар уже есть в корзине, то увеличиваем количество
     shopStore.orders[orderExistIndex].quantity++;
   }
-
+};
+const getProductQuantityInCart = (product) => {
+  const order = shopStore.orders.find((item) => item.id === product.id);
+  return order ? order.quantity : 0;
 };
 
-
+const incrementQuantity = (product) => {
+  const orderExistIndex = shopStore.orders.findIndex(
+    (item) => item.id === product.id,
+  );
+  if (orderExistIndex !== -1) {
+    shopStore.orders[orderExistIndex].quantity++;
+  }
+};
+const decrementQuantity = (product) => {
+  const orderExistIndex = shopStore.orders.findIndex(
+    (item) => item.id === product.id,
+  );
+  if (orderExistIndex !== -1) {
+    const currentQuantity = shopStore.orders[orderExistIndex].quantity;
+    if (currentQuantity > 1) {
+      shopStore.orders[orderExistIndex].quantity--;
+    } else {
+      // Если количество товара в корзине становится 1, то удаляем его из корзины
+      isInCart.value = false;
+      shopStore.orders.splice(orderExistIndex, 1);
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -102,7 +142,20 @@ const addProductToBusket = (product) => {
   font-size: 22px;
   margin-bottom: 10px;
 }
-
+.quantityBlock {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+.quantity {
+  margin: 0 5px;
+}
+.minusIcon,
+.plusIcon {
+  width: 1em;
+  height: 1em;
+  color: $secondary;
+}
 .description {
   font-size: 18px;
   margin-bottom: 10px;

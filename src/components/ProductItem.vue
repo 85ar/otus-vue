@@ -17,6 +17,17 @@
           :disabled="isInCart"
         >
           {{ isInCart ? "In cart" : "Add to cart" }}
+          <div v-if="isInCart" class="quantityBlock">
+            <button @click.stop="decrementQuantity">
+              <AkMinus class="minusIcon" />
+            </button>
+            <span class="quantity">{{
+              getProductQuantityInCart(props.product)
+            }}</span>
+            <button @click.stop="incrementQuantity">
+              <AkPlus class="plusIcon" />
+            </button>
+          </div>
         </button>
       </div>
     </div>
@@ -27,6 +38,8 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useShopStore } from "../store/shopStore";
+import { AkPlus } from "@kalimahapps/vue-icons";
+import { AkMinus } from "@kalimahapps/vue-icons";
 
 const shopStore = useShopStore();
 
@@ -41,8 +54,10 @@ const props = defineProps({
 
 const addProductToBusket = (product) => {
   isInCart.value = true;
-// проверка, есть ли товар в корзине
-  const orderExistIndex = shopStore.orders.findIndex((item) => item.id === product.id);
+  // проверка, есть ли товар в корзине
+  const orderExistIndex = shopStore.orders.findIndex(
+    (item) => item.id === product.id,
+  );
   //если его там еще нет, то добавляем его
   if (orderExistIndex === -1) {
     shopStore.orders.push({ ...product, quantity: 1 });
@@ -50,7 +65,34 @@ const addProductToBusket = (product) => {
     // если товар уже есть в корзине, то увеличиваем количество
     shopStore.orders[orderExistIndex].quantity++;
   }
+};
+const getProductQuantityInCart = (product) => {
+  const order = shopStore.orders.find((item) => item.id === product.id);
+  return order ? order.quantity : 0;
+};
 
+const incrementQuantity = () => {
+  const orderExistIndex = shopStore.orders.findIndex(
+    (item) => item.id === props.product.id,
+  );
+  if (orderExistIndex !== -1) {
+    shopStore.orders[orderExistIndex].quantity++;
+  }
+};
+const decrementQuantity = () => {
+  const orderExistIndex = shopStore.orders.findIndex(
+    (item) => item.id === props.product.id,
+  );
+  if (orderExistIndex !== -1) {
+    const currentQuantity = shopStore.orders[orderExistIndex].quantity;
+    if (currentQuantity > 1) {
+      shopStore.orders[orderExistIndex].quantity--;
+    } else {
+      // Если количество товара в корзине становится 1, то удаляем его из корзины
+      isInCart.value = false;
+      shopStore.orders.splice(orderExistIndex, 1);
+    }
+  }
 };
 
 const openProductDetail = (product) => {
@@ -73,6 +115,20 @@ const openProductDetail = (product) => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.quantityBlock {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+.quantity {
+  margin: 0 5px;
+}
+.minusIcon,
+.plusIcon {
+  width: 1em;
+  height: 1em;
+  color: $secondary;
 }
 .card:hover {
   filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.35));

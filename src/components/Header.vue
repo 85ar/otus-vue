@@ -25,7 +25,7 @@
         <div class="searchIcon"><AnOutlinedSearch /></div>
       </div>
       <div class="btnsGroup">
-        <router-link to="/login" class="userBtn">
+        <div class="userBtn">
           <AnOutlinedUser
             :class="{
               userInIcon: shopStore.isAuthValue,
@@ -39,7 +39,7 @@
             }"
             >{{ shopStore.isAuthValue ? "user" : "guest" }}</span
           >
-        </router-link>
+        </div>
         <router-link to="/shopping-cart" class="shoppingBtn">
           <CaShoppingCart class="shoppingIcon" />
           <span v-if="shopStore.ordersCount" class="orderCount">{{
